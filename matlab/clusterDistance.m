@@ -12,7 +12,7 @@ clusDist = 0;
 for i = 1:n
     minn = Inf;
     for j = 1:m 
-        d = distM(A(i,1:dim),B(j,1:dim));
+        d = distanceMetric(A(i,1:dim),B(j,1:dim),distM);
         if d < minn
             minn = d;
         end
