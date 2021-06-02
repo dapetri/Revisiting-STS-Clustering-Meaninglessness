@@ -8,7 +8,7 @@ cluster_distance <- function(A,B,distM) {
   for (i in 1:n) {
     minn <- Inf
     for (j in 1:m) {
-      dist <- distM(A[i,1:d],B[j,1:d])
+      dist <- distance_measure(A[i,1:d],B[j,1:d],distM)
       if (d < minn) {
         minn <- dist
       }

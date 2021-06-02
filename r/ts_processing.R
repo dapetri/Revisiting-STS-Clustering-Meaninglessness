@@ -7,9 +7,16 @@ to_sts_matrix <- function(ts,w) {
   return(sts)
 }
 
-to_random_sampling_matrix <- function(ts,w) {
-  n <- length(ts)-w+1
-  data_matrix <- matrix(0, nrow = n, ncol = w)
+to_random_sampling_matrix <- function(ts,w,red_sampl_size) {
+  m <- length(ts)
+  
+  if (red_sampl_size) {
+    num_samples <- floor(m/w)
+  } else {
+    num_samples = m-w+1
+  }
+  
+  data_matrix <- matrix(0, nrow = num_samples, ncol = w)
   
   for (i in 1:n) {
     r <- sample(1:n,1)
