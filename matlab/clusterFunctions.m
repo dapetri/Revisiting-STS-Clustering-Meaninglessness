@@ -14,7 +14,10 @@ elseif algorName == "agglo"
         tag = tags(i);
         counts(tag) = counts(tag)+1;
         centroids(tag,:) = centroids(tag,:) + featureMatrix(i,:);
-    end    
+    end
+    for i=1:k
+        centroids(i,:) = centroids(i,:) / counts(i);
+    end
 elseif algorName == "gmm"
     gmm = fitgmdist(featureMatrix,k);
     centroids = gmm.mu;

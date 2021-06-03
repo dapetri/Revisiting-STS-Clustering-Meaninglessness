@@ -40,7 +40,7 @@ clusterAlgos = ["kmeans" "agglo" "gmm"];
 
 currentNorm = normMethods(2);
 % used clustering algorithm
-currentClusterAlgo = clusterAlgos(1);
+currentClusterAlgo = clusterAlgos(2);
 % used time series
 currentTs = spx_short;
 
