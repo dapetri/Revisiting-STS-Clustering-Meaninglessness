@@ -1,7 +1,9 @@
 function [clusDist] = clusterDistance(A,B,distM)
-%param a: cluster centres derived from one run of clustering algor (shape: [k,w])
-%param b: cluster centres derived from different run of clustering algor (shape: [k,w])
-%param d: distance metric
+%Calculate distance between to sets of clusters (as defined by Keogh).
+%   param A: cluster centres derived from one run of clustering algor (shape: [k,w])
+%   param B: cluster centres derived from different run of clustering algor (shape: [k,w])
+%   param distM: distance metric
+%   return clusDist: cluster distance
 n = size(A,1);
 m = size(B,1);
 dim = size(A,2);

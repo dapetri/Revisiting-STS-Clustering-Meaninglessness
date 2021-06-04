@@ -1,6 +1,9 @@
 function [centroids] = clusterFunctions(featureMatrix,k,algorName)
-%CLUSTERFUNCTION Summary of this function goes here
-%   Detailed explanation goes here
+%Calculating centroids for given feature matrix and specified clustering algorithm.
+%    :param featureMatrix: (shape: [n,w])
+%    :param k: number of clusters to be found
+%    :param algorName: name/tag of cluster algorithm to be used
+%    :return centroids: centroids determined (shape: [k,w])
 
 centroids = 0;
 if algorName == "kmeans"

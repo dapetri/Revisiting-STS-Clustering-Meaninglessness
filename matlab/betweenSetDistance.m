@@ -1,6 +1,9 @@
 function [dist] = betweenSetDistance(X,Y,distM)
-%param X: set of cluster centers (shape: [k,w,n])
-%param Y: set of cluster centers (shape: [k,w,n])
+%Calculate the cluster distance between two sets of clusters (as defined by Keogh).
+%    :param X: set of cluster centers derived with the same clustering method (shape: [k,w,n])
+%    :param Y: set of cluster centers derived with the same but different clustering method as x (shape: [k,w,n])
+%    :param distM: name/tag of distance metric to be used for distance calculation
+%    :return dist: between set distance
 n = size(X,3);
 m = size(Y,3);
 
