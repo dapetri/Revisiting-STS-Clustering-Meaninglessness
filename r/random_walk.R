@@ -1,4 +1,8 @@
 create_random_walk <- function(ts) {
+# Create same length random walk as times series.
+# :param ts: time series to which length random walk should be equal (shape: [m])
+# :return: random walk with same length to ts (shape: [m])
+    
   n <- length(ts)
   ma <- max(ts)
   mi <- min(ts)

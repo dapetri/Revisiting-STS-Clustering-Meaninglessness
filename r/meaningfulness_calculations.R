@@ -6,6 +6,19 @@ source("cluster_functions.R")
 library(caret)
 
 calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_algo,reduced_sampling,dim_red) {
+#  Calculating sts and whole meaningfulness for 2 given time series where ts is the time series in regard.
+#  :param ts: time series in regard (shape: [m])
+#  :param opposing_ts: opposing time series (e.g. random walk) (shape: [m']) where m' not necessatily equal to m
+#  :param n: amount of meaningfulness calculations to be averaged over
+#  :param k: amount of centroids to be calculated
+#  :param w: sliding window size
+#  :param r: size of sets for between/within set distance
+#  :param normalizer: name/tag of normalizer to be used
+#  :param reduced_sampling_size: if true, sampling size for whole clustering will be reduced
+#  :param dist_metric_name: name/tag of distance metric to be used
+#  :param cluster_algor_name: name/tag of clustering algorithm to be used
+#  :param dim_red: if true, pca will be calculated on feature matrix for w>8
+#  :return: sts meaningfulness, whole meaningfulness
   meaningfulness_sts <- 0
   meaningfulness_whole <- 0
   
