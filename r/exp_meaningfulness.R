@@ -1,7 +1,7 @@
 source("random_walk.R")
 source("meaningfulness_calculations.R")
 
-n <- 100
+n <- 1
 r <- 3
 ks <- c(3,5,7,11)
 ws <- c(8,16,32)
@@ -36,7 +36,7 @@ cluster_algos <- c("kmeans","agglo","gmm")
 
 norm_method <- norm_methods[1]
 dist_metric <- dist_metrics[1]
-cluster_algo <- cluster_algos[1]
+cluster_algo <- cluster_algos[2]
 
 ts <- spx_short
 rw <- create_random_walk(ts)
@@ -64,4 +64,4 @@ for (k in ks) {
   }
 }
 
-
+print(meaningfulness_sts)

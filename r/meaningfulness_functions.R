@@ -9,7 +9,7 @@ cluster_distance <- function(A,B,distM) {
     minn <- Inf
     for (j in 1:m) {
       dist <- distance_measure(A[i,1:d],B[j,1:d],distM)
-      if (d < minn) {
+      if (dist < minn) {
         minn <- dist
       }
     }
@@ -42,5 +42,9 @@ between_set_distance <- function(X,Y,distM) {
 }
 
 cluster_meaningfulness <- function(X,Y,distM) {
-  return(within_set_distance(X,distM) / between_set_distance(X,Y,distM))
+  w <- within_set_distance(X,distM)
+  b <- between_set_distance(X,Y,distM)
+  #print(w)
+  #print(b)
+  return(w / b)
 }

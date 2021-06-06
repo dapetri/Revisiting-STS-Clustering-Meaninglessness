@@ -18,8 +18,8 @@ to_random_sampling_matrix <- function(ts,w,red_sampl_size) {
   
   data_matrix <- matrix(0, nrow = num_samples, ncol = w)
   
-  for (i in 1:n) {
-    r <- sample(1:n,1)
+  for (i in 1:num_samples) {
+    r <- sample(1:num_samples,1)
     data_matrix[i,] = ts[r:(r+w-1)]
   }
   return(data_matrix)

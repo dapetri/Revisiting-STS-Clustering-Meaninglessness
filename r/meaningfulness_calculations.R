@@ -21,6 +21,10 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
   whole_random_matrix <- to_random_sampling_matrix(rw, w, reduced_sampling)
   whole_random_matrix <- scale_feature_matrix(whole_random_matrix, norm_method)
   
+  if (dim_red && w>8) {
+    
+  }
+  
   for (z in 1:n) {
     sts_ts_kmeans_centers <- array(0, c(k,w,r))
     whole_ts_kmeans_centers <- array(0, c(k,w,r))
@@ -33,8 +37,8 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
       sts_random_kmeans_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo)
       whole_random_kmeans_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo)
     }
-    meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_kmeans_centers, sts_random_kmeans_centers, distM)
-    meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_kmeans_centers, whole_random_kmeans_centers, distM)
+    meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_kmeans_centers, sts_random_kmeans_centers, dist_m)
+    meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_kmeans_centers, whole_random_kmeans_centers, dist_m)
   }
   return(c(meaningfulness_sts/n, meaningfulness_whole/n))
 }

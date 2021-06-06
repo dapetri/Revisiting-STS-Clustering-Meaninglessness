@@ -1,0 +1,229 @@
+---
+title: "Meaningfulness of STS Clustering"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+## Importing variety of time series
+
+Importing S&P 500 Daily time series:
+
+```{r}
+spx_short <- read.csv('../data/spx_daily_11-21.csv')
+spx_short <- rev(spx_short[,2])
+idx = 1:length(spx_short)
+sprintf("Length: %d",length(spx_short))
+plot(idx,spx_short,type='l')
+```
+
+Importing S&P 500 all time monthly time series:
+
+```{r}
+spx_long <- read.csv('../data/spx_monthly_alltime.csv')
+spx_long <- spx_long[,2]
+idx = 1:length(spx_long)
+sprintf("Length: %d",length(spx_long))
+plot(idx,spx_long,type='l')
+```
+
+Importing minimum temperature data set:
+
+```{r}
+min_daily_temp <- read.csv('../data/daily-minimum-temperatures-in-melbourne.csv')
+min_daily_temp <- min_daily_temp[,2]
+idx = 1:length(min_daily_temp)
+sprintf("Length: %d",length(min_daily_temp))
+plot(idx,min_daily_temp,type='l')
+```
+
+Importing german BIP:
+
+```{r}
+bip_de <- read.csv('../data/bip_de_preisbereinigt.csv',sep=';')
+bip_de <- bip_de[,2]
+idx = 1:length(bip_de)
+sprintf("Length: %d",length(bip_de))
+plot(idx,bip_de,type='l')
+```
+
+Importing german DAX 2021:
+
+```{r}
+dax <- read.csv('../data/dax.csv')
+dax <- dax[,2]
+idx = 1:length(dax)
+sprintf("Length: %d",length(dax))
+plot(idx,dax,type='l')
+```
+
+Importing german DAX alltime:
+
+```{r}
+char_dax_alltime <- read.csv('../data/dax_alltime.csv',sep=',')
+char_dax_alltime <- char_dax_alltime[,2]
+dax_alltime = as.double(char_dax_alltime)
+idx = 1:length(dax_alltime)
+for (i in idx) {
+  if (is.na(dax_alltime[i])||is.nan(dax_alltime[i])) {
+    dax_alltime[i] <- dax_alltime[i-1]
+  }
+}
+sprintf("Length: %d",length(dax_alltime))
+plot(idx,dax_alltime,type='l')
+```
+
+Importing Bitcoin alltime:
+
+```{r}
+char_bitcoin_alltime <- read.csv('../data/bitcoin_alltime.csv')
+char_bitcoin_alltime <- char_bitcoin_alltime[,2]
+bitcoin_alltime = as.double(char_bitcoin_alltime)
+idx = 1:length(bitcoin_alltime)
+
+for (i in idx) {
+  if (is.na(bitcoin_alltime[i])) {
+    bitcoin_alltime[i] <- bitcoin_alltime[i-1]
+  }
+}
+sprintf("Length: %d",length(bitcoin_alltime))
+plot(idx,bitcoin_alltime,type='l')
+```
+
+Importing hydraulic pressure data set:
+
+```{r}
+hydraulic <- read.csv('../data/PS1.csv')
+hydraulic <- hydraulic[,2]
+idx = 1:length(hydraulic)
+for (i in idx) {
+  if (is.nan(hydraulic[i])) {
+    hydraulic[i] = hydraulic[i-1]
+  }
+}
+sprintf("Length: %d",length(hydraulic))
+plot(idx,hydraulic,type='l')
+```
+
+Importing Beijing O3 in air concentration (quality):
+
+```{r}
+air_quality <- read.csv('../data/PRSA_Data_Dingling_20130301-20170228.csv')
+air_quality <- air_quality[,11]
+idx = 1:length(air_quality)
+for (i in idx) {
+  if (is.nan(air_quality[i])) {
+    air_quality[i] = air_quality[i-1]
+  }
+}
+sprintf("Length: %d",length(air_quality))
+plot(idx,air_quality,type='l')
+```
+
+### Setting hyper parameters for experimental run
+
+```{r}
+# number of iterations of meaningfulness calculation to average over.
+n <- 1
+# size of cluster set to be calculated for within/between set cluster distance.
+r <- 3
+
+ks <- c(3,5,7,11)
+ws <- c(8,16,32)
+
+norm_methods <- c("none","center", "scale", "range");
+dist_metrics <- c("eukl")
+cluster_algos <- c("kmeans","agglo","gmm")
+## time_series to chose from:
+# spx_short, spx_long, min_daily_temp, bip_de, dax, dax_alltime, bitcoin_alltime, hydraulic, quality
+
+norm_method <- norm_methods[1]
+
+# used distance metric
+dist_metric <- dist_metrics[1]
+
+# used clustering algorithm
+cluster_algo <- cluster_algos[3]
+
+# reduces de sampling size of the random sampled subsequences that are used for whole clustering
+# if false the random samples matrix has the same height as the sts matrix
+reduced_sampling <- TRUE
+#not working yet
+#dim_red <- FALSE
+
+# used time series 
+current_ts <- spx_short
+
+# Instead of a random walk we could also pass any opposing time series
+opposing_ts = spx_long
+opposing_ts <- create_random_walk(current_ts)
+
+```
+
+### Finally calculate Meaningfulness
+
+```{r}
+source("random_walk.R")
+source("meaningfulness_calculations.R")
+print('Experiment settings:')
+print('')
+sprintf("n:                                           %d",n)
+sprintf('r:                                           %d',r)
+sprintf('Normalizer:                                  %s',norm_method)
+sprintf('Distance metric:                             %s',dist_metric)
+sprintf('Clustering algorithm:                        %s',cluster_algo)
+sprintf('Reduced sampling size for whole clustering:  %s',reduced_sampling)
+sprintf('PCA:                                         %s',dim_red)
+
+plot(1:length(current_ts),current_ts, type = 'l')
+title("Target time series")
+
+plot(1:length(opposing_ts),opposing_ts,type = 'l')
+title("Opposing time series")
+
+print("")
+print("Results:")
+
+l_ks <- length(ks)
+l_ws <- length(ws)
+
+meaningfulness_table <- matrix(0, nrow = (l_ks*l_ws), ncol = 4)
+meaningfulness_plot <- matrix(0, nrow=length(ws), ncol = (length(ks)*2))
+
+i <- 1
+j <- 1
+for (w in 1:length(ws)) {
+  j <- 1
+  for (k in 1:length(ks)) {
+    m <- calculate_meaningfulness(current_ts,opposing_ts,n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red)
+    meaningfulness_table[i,] <- c(ws[w],ks[k],m[1],m[2])
+    meaningfulness_plot[w,j] <- m[1]
+    meaningfulness_plot[w,(j+1)] <- m[2]
+    i <- i+1
+    j <- j+2
+  }
+}
+
+
+df_meaningfulness <- data.frame(w=meaningfulness_table[,1],
+                                k=meaningfulness_table[,2],
+                                sts=meaningfulness_table[,3],
+                                whole=meaningfulness_table[,4])
+df_meaningfulness
+
+for (i in 1:length(ws)) {
+  df_meaningfulness_plot <- data.frame(meaningfulness=meaningfulness_plot[i,],
+                                k=rep(c("3","5","7","11"),each=2),
+                                algorithm=c("sts","whole"))
+  str = paste("w =",ws[w])
+  print(ggplot(df_meaningfulness_plot,                                      
+       aes(x = k,
+           y = meaningfulness,
+           fill = algorithm)) +
+    geom_bar(stat = "identity",
+             position = "dodge") +
+    labs(title = str))
+  Sys.sleep(1)
+}
+
+
+``` 

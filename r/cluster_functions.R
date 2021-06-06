@@ -1,10 +1,24 @@
+library(ClusterR)
 cluster_functions <- function(feature_matrix,k,algo_name) {
   if (algo_name == "kmeans") {
     return(kmeans(feature_matrix,k)$centers)
   } else if (algo_name == "agglo") {
-    hcl <- hclust(feature_matrix)
-    return(cutree(hcl, k=k))
-  } else if (aglo_name == "gmm") {
-    return(GMM(feature_matrix, k)$centroids)
+    dist_mat <- dist(feature_matrix)
+    hcl <- hclust(dist_mat)
+    tags <- cutree(hcl, k=k)
+    centroids <- array(0,c(k,dim(feature_matrix)[2]))
+    counts <- array(0,c(1,k))
+    for (i in 1:length(tags)) {
+      tag <- tags[i]
+      counts[tag] <- counts[tag]+1
+      centroids[tag,] <- centroids[tag,] + feature_matrix[i,]
+    }
+    for (i in 1:k) {
+      centroids[i,] <- centroids[i,]/counts[i]
+    }
+    return(centroids)
+  } else if (algo_name == "gmm") {
+    gmm = GMM(feature_matrix, k)
+    return(gmm$centroids)
   }
 }
