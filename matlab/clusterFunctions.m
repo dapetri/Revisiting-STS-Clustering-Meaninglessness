@@ -7,7 +7,7 @@ function [centroids] = clusterFunctions(featureMatrix,k,algorName)
 
 centroids = 0;
 if algorName == "kmeans"
-    [~,C] = kmeans(featureMatrix,k,"Start","plus");
+    [~,C] = kmeans(featureMatrix,k);
     centroids = C;
 elseif algorName == "agglo"
     tags = clusterdata(featureMatrix,k);
