@@ -124,7 +124,7 @@ plot(idx,air_quality,type='l')
 ```{r}
 source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
-n <- 1
+n <- 10
 # size of cluster set to be calculated for within/between set cluster distance.
 r <- 3
 
@@ -147,16 +147,16 @@ cluster_algo <- cluster_algos[1]
 
 # reduces de sampling size of the random sampled subsequences that are used for whole clustering
 # if false the random samples matrix has the same height as the sts matrix
-reduced_sampling <- TRUE
+reduced_sampling <- FALSE
 #not working yet
-#dim_red <- FALSE
+dim_red <- FALSE
 
 # used time series 
 current_ts <- spx_short
 
 # Instead of a random walk we could also pass any opposing time series
 opposing_ts <- spx_long
-#opposing_ts <- create_random_walk(current_ts)
+opposing_ts <- create_random_walk(current_ts)
 
 ```
 
