@@ -80,12 +80,12 @@ for (i in 1:length(labels_2)) {
 plot(samples_2000[,1],samples_2000[,2],col='white',xlab='x',ylab='y',main='First run of KMeans')
 points(group_1_0[,1],group_1_0[,2],col='blue')
 points(group_1_1[,1],group_1_1[,2],col='red')
-points(centroids_1[,1],centroids_1[,1],col='black',pch='+',cex=2)
+points(centroids_1[,1],centroids_1[,2],col='black',pch='+',cex=2)
 
 plot(samples_2000[,1],samples_2000[,2],col='white',xlab='x',ylab='y',main='Second run of KMeans')
 points(group_2_0[,1],group_2_0[,2],col='blue')
 points(group_2_1[,1],group_2_1[,2],col='red')
-points(centroids_2[,1],centroids_2[,1],col='black',pch='+',cex=2)
+points(centroids_2[,1],centroids_2[,2],col='black',pch='+',cex=2)
 
 ```
 Now on data set with just 20 points.
@@ -153,10 +153,10 @@ for (i in 1:length(labels_2)) {
 plot(samples_20[,1],samples_20[,2],col='white',xlab='x',ylab='y',main='First run of KMeans')
 points(group_1_0[,1],group_1_0[,2],col='blue')
 points(group_1_1[,1],group_1_1[,2],col='red')
-points(centroids_1[,1],centroids_1[,1],col='black',pch='+',cex=2)
+points(centroids_1[,1],centroids_1[,2],col='black',pch='+',cex=2)
 
 plot(samples_20[,1],samples_20[,2],col='white',xlab='x',ylab='y',main='Second run of KMeans')
 points(group_2_0[,1],group_2_0[,2],col='blue')
 points(group_2_1[,1],group_2_1[,2],col='red')
-points(centroids_2[,1],centroids_2[,1],col='black',pch='+',cex=2)
+points(centroids_2[,1],centroids_2[,2],col='black',pch='+',cex=2)
 ```
