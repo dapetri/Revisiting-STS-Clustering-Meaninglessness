@@ -5,7 +5,7 @@ source('scale_feature_matrix.R')
 source("cluster_functions.R")
 library(caret)
 
-calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_algo,reduced_sampling,dim_red) {
+calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_algo,reduced_sampling,dim_red,unify) {
 #  Calculating sts and whole meaningfulness for 2 given time series where ts is the time series in regard.
 #  :param ts: time series in regard (shape: [m])
 #  :param opposing_ts: opposing time series (e.g. random walk) (shape: [m']) where m' not necessatily equal to m
@@ -45,11 +45,12 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
     whole_random_kmeans_centers <- array(0, c(k,w,r))
     
     for (i in 1:r) {
-      sts_ts_kmeans_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo)
-      whole_ts_kmeans_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo)
-      sts_random_kmeans_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo)
-      whole_random_kmeans_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo)
+      sts_ts_kmeans_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo,unify)
+      whole_ts_kmeans_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo,unify)
+      sts_random_kmeans_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
+      whole_random_kmeans_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
     }
+    #print(sts_ts_kmeans_centers)
     meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_kmeans_centers, sts_random_kmeans_centers, dist_m)
     meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_kmeans_centers, whole_random_kmeans_centers, dist_m)
   }

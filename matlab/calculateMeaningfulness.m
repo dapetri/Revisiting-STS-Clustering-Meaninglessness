@@ -1,4 +1,4 @@
-function [meaningfulness_sts,meaningfulness_whole] = calculateMeaningfulness(target_ts, opposing_ts ,n, k, w, r, distM, normMethod, clusterAlgo, reducedSampling, dimRed)
+function [meaningfulness_sts,meaningfulness_whole] = calculateMeaningfulness(target_ts, opposing_ts ,n, k, w, r, distM, normMethod, clusterAlgo, reducedSampling, dimRed unify)
 %Calculating sts and whole meaningfulness for 2 given time series where ts is the time series in regard.
 %    :param ts: time series in regard (shape: [m])
 %    :param opposing_ts: opposing time series (e.g. random walk) (shape: [m']) where m' not necessatily equal to m
@@ -48,10 +48,10 @@ for z = 1:n
     whole_opposing_centers = zeros(k,w);
 
     for i = 1:r
-        sts_target_centers(:,:,i) = clusterFunctions(sts_target_matrix,k,clusterAlgo);
-        whole_target_centers(:,:,i) = clusterFunctions(whole_target_matrix,k,clusterAlgo);
-        sts_opposing_centers(:,:,i) = clusterFunctions(sts_opposing_matrix,k,clusterAlgo);
-        whole_opposing_centers(:,:,i) = clusterFunctions(whole_opposing_matrix,k,clusterAlgo);    
+        sts_target_centers(:,:,i) = clusterFunctions(sts_target_matrix,k,clusterAlgo,unify);
+        whole_target_centers(:,:,i) = clusterFunctions(whole_target_matrix,k,clusterAlgo,unify);
+        sts_opposing_centers(:,:,i) = clusterFunctions(sts_opposing_matrix,k,clusterAlgo,unify);
+        whole_opposing_centers(:,:,i) = clusterFunctions(whole_opposing_matrix,k,clusterAlgo,unify);    
         
     end
     meaningfulness_sts = meaningfulness_sts + clusteringMeaningfulness(sts_target_centers, sts_opposing_centers, distM);

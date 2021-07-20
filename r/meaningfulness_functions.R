@@ -63,6 +63,8 @@ cluster_meaningfulness <- function(X,Y,distM) {
 #  :return: clustering meaningfulness as a quotient of within set distance of x and between set distance between x and y
   w <- within_set_distance(X,distM)
   b <- between_set_distance(X,Y,distM)
+  #sprintf("WSD: %f",w)
+  #sprintf("BSD: %f",b)
   #print(w)
   #print(b)
   return(w / b)
