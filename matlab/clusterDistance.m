@@ -18,8 +18,8 @@ for i = 1:n
         if d < minn
             minn = d;
         end
-    clusDist = clusDist + minn;
     end
+    clusDist = clusDist + minn;
 end
 end
 

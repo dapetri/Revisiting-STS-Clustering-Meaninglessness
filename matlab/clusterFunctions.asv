@@ -23,8 +23,8 @@ elseif algorName == "agglo"
         centroids(i,:) = centroids(i,:) / counts(i);
     end
 elseif algorName == "gmm"
-    options = statset('MaxIter',100,'TolFun',1e-3);
-    gmm = fitgmdist(featureMatrix,k,'CovarianceType','full','Options',options,'RegularizationValue',1e-6,'Start','plus');
+    options = statset('MaxIter',100,'TolFun',1Se-6);
+    gmm = fitgmdist(featureMatrix,k,'CovarianceType','diagonal','Options',options);
     centroids = gmm.mu;
 end
 end

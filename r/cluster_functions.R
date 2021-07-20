@@ -8,8 +8,8 @@ cluster_functions <- function(feature_matrix,k,algo_name) {
   if (algo_name == "kmeans") {
     return(kmeans(feature_matrix,k)$centers)
   } else if (algo_name == "agglo") {
-    dist_mat <- dist(feature_matrix)
-    hcl <- hclust(dist_mat)
+    dist_mat <- dist(feature_matrix, method = "euclidean")
+    hcl <- hclust(dist_mat,method = "ward.D")
     tags <- cutree(hcl, k=k)
     centroids <- array(0,c(k,dim(feature_matrix)[2]))
     counts <- array(0,c(1,k))
@@ -23,7 +23,7 @@ cluster_functions <- function(feature_matrix,k,algo_name) {
     }
     return(centroids)
   } else if (algo_name == "gmm") {
-    gmm = GMM(feature_matrix, k)
+    gmm = GMM(feature_matrix, gaussian_comps=k, dist_mode="eucl_dist")
     return(gmm$centroids)
   }
 }
