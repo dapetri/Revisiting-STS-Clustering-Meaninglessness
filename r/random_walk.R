@@ -7,6 +7,7 @@ create_random_walk <- function(ts) {
   ma <- max(ts)
   mi <- min(ts)
   movement <-  10;
+  set.seed(0)
   
   random_walk <- c(1:n)
   random_walk[1] <- mi + runif(1) * (ma-mi)

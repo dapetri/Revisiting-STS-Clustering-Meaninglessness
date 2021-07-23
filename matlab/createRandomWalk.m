@@ -5,6 +5,7 @@ function [randomWalk] = createRandomWalk(ts)
 ma = max(ts);
 mi = min(ts);
 movement =  10;
+rng(0)
 
 randomWalk = zeros(1,length(ts));
 randomWalk(1) = mi + rand * (ma-mi);
