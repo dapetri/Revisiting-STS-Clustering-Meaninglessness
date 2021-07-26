@@ -6,7 +6,6 @@ function [centroids] = clusterFunctions(featureMatrix,k,algorName,unify)
 %    :param unify: boolean if hyperparameters of cluster function should be same or default values
 %    :return centroids: centroids determined (shape: [k,w])
 
-centroids = 0;
 if algorName == "kmeans"
     if unify
         [~,C] = kmeans(featureMatrix,k,'Distance','sqeuclidean','MaxIter',300,'Replicates',1,'Start','plus');

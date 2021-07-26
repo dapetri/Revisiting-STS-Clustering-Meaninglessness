@@ -96,8 +96,8 @@ hydraulic <- read.csv('../data/PS1.csv')
 hydraulic <- hydraulic[,2]
 idx = 1:length(hydraulic)
 for (i in idx) {
-  if (is.nan(hydraulic[i])) {
-    hydraulic[i] = hydraulic[i-1]
+  if (is.nan(hydraulic[i]) || is.na(hydraulic[i])) {
+    hydraulic[i] <- hydraulic[i-1]
   }
 }
 sprintf("Length: %d",length(hydraulic))
@@ -111,7 +111,7 @@ air_quality <- read.csv('../data/PRSA_Data_Dingling_20130301-20170228.csv')
 air_quality <- air_quality[,11]
 idx = 1:length(air_quality)
 for (i in idx) {
-  if (is.nan(air_quality[i])) {
+  if (is.nan(air_quality[i]) || is.na(air_quality[i])) {
     air_quality[i] = air_quality[i-1]
   }
 }
@@ -124,7 +124,7 @@ plot(idx,air_quality,type='l')
 ```{r}
 source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
-n <- 100
+n <- 10
 # size of cluster set to be calculated for within/between set cluster distance.
 r <- 3
 
@@ -135,7 +135,7 @@ norm_methods <- c("none","center", "scale", "range");
 dist_metrics <- c("eukl")
 cluster_algos <- c("kmeans","agglo","gmm")
 ## time_series to chose from:
-# spx_short, spx_long, min_daily_temp, bip_de, dax, dax_alltime, bitcoin_alltime, hydraulic, quality
+# spx_short, spx_long, min_daily_temp, bip_de, dax_alltime, bitcoin_alltime, hydraulic, quality
 
 norm_method <- norm_methods[4]
 
@@ -152,13 +152,13 @@ reduced_sampling <- TRUE
 dim_red <- FALSE
 
 # if hyperparameters should be same among all cluster algorithms
-unify <- FALSE
+unify <- TRUE
 
 # used time series 
 current_ts <- spx_long
 
 # Instead of a random walk we could also pass any opposing time series
-#opposing_ts <- spx_long
+opposing_ts <- spx_long
 opposing_ts <- create_random_walk(current_ts)
 
 ```
@@ -194,6 +194,9 @@ l_ws <- length(ws)
 meaningfulness_table <- matrix(0, nrow = (l_ks*l_ws), ncol = 4)
 meaningfulness_plot <- matrix(0, nrow=length(ws), ncol = (length(ks)*2))
 
+```
+
+```{r}
 i <- 1
 j <- 1
 for (w in 1:length(ws)) {
@@ -230,5 +233,62 @@ for (i in 1:length(ws)) {
   Sys.sleep(1)
 }
 
+``` 
+
+### Calculating average meaningfulness over all time series
+
+```{r}
+# spx_short, spx_long, min_daily_temp, dax_alltime, bitcoin_alltime, hydraulic, quality
+i <- 1
+j <- 1
+for (w in 1:length(ws)) {
+  j <- 1
+  for (k in 1:length(ks)) {
+    m <- calculate_meaningfulness(spx_short, (spx_short), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: spx_short')
+    m <- m + calculate_meaningfulness(spx_long, (spx_long), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: spx_long')
+    m <- m + calculate_meaningfulness(min_daily_temp, (min_daily_temp), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: min_daily_temp')
+    m <- m + calculate_meaningfulness(dax_alltime, (dax_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: dax_alltime')
+    m <- m + calculate_meaningfulness(bitcoin_alltime, (bitcoin_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: bitcoin_alltime')
+    m <- m + calculate_meaningfulness(hydraulic, (hydraulic), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: hydraulic')
+    m <- m + calculate_meaningfulness(air_quality, (air_quality), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    print('Calculated: air_quality')
+    m <- m/7
+
+    meaningfulness_table[i,] <- c(ws[w],ks[k],m[1],m[2])
+    meaningfulness_plot[w,j] <- m[1]
+    meaningfulness_plot[w,(j+1)] <- m[2]
+    i <- i+1
+    j <- j+2
+  }
+}
+ 
+
+df_meaningfulness <- data.frame(w=meaningfulness_table[,1],
+                                k=meaningfulness_table[,2],
+                                sts=meaningfulness_table[,3],
+                                whole=meaningfulness_table[,4])
+df_meaningfulness
+
+for (i in 1:length(ws)) {
+  df_meaningfulness_plot <- data.frame(meaningfulness=meaningfulness_plot[i,],
+                                k=rep(c("3","5","7","11"),each=2),
+                                algorithm=c("sts","whole"))
+  str = paste("w =",ws[w])
+  print(ggplot(df_meaningfulness_plot,                                      
+       aes(x = k,
+           y = meaningfulness,
+           fill = algorithm)) +
+    geom_bar(stat = "identity",
+             position = "dodge") +
+    labs(title = str))
+  Sys.sleep(1)
+}
 
 ``` 
+

@@ -1,4 +1,4 @@
-function [meaningfulness_sts,meaningfulness_whole] = calculateMeaningfulness(target_ts, opposing_ts ,n, k, w, r, distM, normMethod, clusterAlgo, reducedSampling, dimRed, unify)
+function [meaningfulness] = calculateMeaningfulness(target_ts, opposing_ts ,n, k, w, r, distM, normMethod, clusterAlgo, reducedSampling, dimRed, unify)
 %Calculating sts and whole meaningfulness for 2 given time series where ts is the time series in regard.
 %    :param ts: time series in regard (shape: [m])
 %    :param opposing_ts: opposing time series (e.g. random walk) (shape: [m']) where m' not necessatily equal to m
@@ -18,7 +18,6 @@ meaningfulness_whole = 0;
 
 sts_target_matrix = toStsMatrix(target_ts, w);
 whole_target_matrix = toRandomSamplingMatrix(target_ts, w, reducedSampling);
-
 sts_opposing_matrix = toStsMatrix(opposing_ts, w);
 whole_opposing_matrix = toRandomSamplingMatrix(opposing_ts, w, reducedSampling);
 
@@ -59,5 +58,6 @@ for z = 1:n
 end
 meaningfulness_sts = meaningfulness_sts/n;
 meaningfulness_whole = meaningfulness_whole/n;
+meaningfulness = [meaningfulness_sts, meaningfulness_whole];
 end
 

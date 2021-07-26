@@ -39,20 +39,20 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
   }
   
   for (z in 1:n) {
-    sts_ts_kmeans_centers <- array(0, c(k,w,r))
-    whole_ts_kmeans_centers <- array(0, c(k,w,r))
-    sts_random_kmeans_centers <- array(0, c(k,w,r))
-    whole_random_kmeans_centers <- array(0, c(k,w,r))
+    sts_ts_centers <- array(0, c(k,w,r))
+    whole_ts_centers <- array(0, c(k,w,r))
+    sts_random_centers <- array(0, c(k,w,r))
+    whole_random_centers <- array(0, c(k,w,r))
     
     for (i in 1:r) {
-      sts_ts_kmeans_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo,unify)
-      whole_ts_kmeans_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo,unify)
-      sts_random_kmeans_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
-      whole_random_kmeans_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
+      sts_ts_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo,unify)
+      whole_ts_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo,unify)
+      sts_random_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
+      whole_random_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
     }
     #print(sts_ts_kmeans_centers)
-    meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_kmeans_centers, sts_random_kmeans_centers, dist_m)
-    meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_kmeans_centers, whole_random_kmeans_centers, dist_m)
+    meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_centers, sts_random_centers, dist_m)
+    meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_centers, whole_random_centers, dist_m)
   }
   return(c(meaningfulness_sts/n, meaningfulness_whole/n))
 }
