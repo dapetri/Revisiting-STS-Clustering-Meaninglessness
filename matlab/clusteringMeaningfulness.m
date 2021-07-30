@@ -6,6 +6,12 @@ function [meaning] = clusteringMeaningfulness(X,Y,distM)
 %    :return meaning: clustering meaningfulness as a quotient ofwithin set distance of x and between set distance between x and y
 wsd = withinSetDistance(X,distM);
 bsd = betweenSetDistance(X,Y,distM);
-meaning = (wsd / bsd);
+
+m = wsd / bsd;
+
+%if isnan(m)
+%    m = 1;
+%end    
+meaning = (m);
 end
 

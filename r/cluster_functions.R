@@ -1,4 +1,6 @@
+source("k-means++.R")
 library(ClusterR)
+
 cluster_functions <- function(feature_matrix,k,algo_name,unify) {
 #  Calculating centroids for given feature matrix and specified clustering algorithm.
 #  :param feature_matrix: (shape: [n,w])
@@ -7,7 +9,10 @@ cluster_functions <- function(feature_matrix,k,algo_name,unify) {
 #  :return: centroids determined (shape: [k,w])
   if (algo_name == "kmeans") {
     if (unify) {
-      km = kmeans(feature_matrix, k, iter.max = 300, nstart = 1, algorithm = "Lloyd")
+      ## using self-implemented k-means++ (slow)
+      km <- kmeans(feature_matrix, k_means_pp(feature_matrix,k), iter.max = 300, nstart = 1, algorithm = "Lloyd")
+      #km <- kmeans(feature_matrix, k, iter.max = 300, nstart = 1, algorithm = "Lloyd")
+      #km <- kmeanspp(feature_matrix, k, iter.max = 300, nstart = 1)
     } else {
       km = kmeans(feature_matrix,k)
     }

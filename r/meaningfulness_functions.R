@@ -14,7 +14,9 @@ cluster_distance <- function(A,B,distM) {
     minn <- Inf
     for (j in 1:m) {
       d <- distance_measure(A[i,1:w],B[j,1:w],distM)
-      if (d < minn) {
+      ## is.nan because for some reason kmeans produces sometimes centroids that are NaN vectors
+      #if (!is.nan(d) && d < minn) {
+      if (!is.nan(d) && d < minn) {
         minn <- d
       }
     }
@@ -63,9 +65,22 @@ cluster_meaningfulness <- function(X,Y,distM) {
 #  :return: clustering meaningfulness as a quotient of within set distance of x and between set distance between x and y
   w <- within_set_distance(X,distM)
   b <- between_set_distance(X,Y,distM)
-  #sprintf("WSD: %f",w)
-  #sprintf("BSD: %f",b)
-  #print(w)
-  #print(b)
-  return(w / b)
+
+  #print(paste('WSD',w))
+  #print(paste('BSD',b))
+  
+  m <- w / b 
+  
+  if (is.nan(m)) {
+    m <- 0
+    print('b was 0')
+    #if (w == 0) {
+    #  m <- 0
+    #} else {
+    #  m <- w/.Machine$double.xmin
+    #}
+    
+  }
+  
+  return(m)
 }
