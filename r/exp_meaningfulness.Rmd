@@ -124,11 +124,7 @@ plot(idx,air_quality,type='l')
 ```{r}
 source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
-<<<<<<< HEAD
 n <- 1
-=======
-n <- 4
->>>>>>> 3688da2b736424e42748630a21d42ee2712a2cf3
 # size of cluster set to be calculated for within/between set cluster distance.
 r <- 10
 
@@ -152,8 +148,7 @@ cluster_algo <- cluster_algos[1]
 # reduces de sampling size of the random sampled subsequences that are used for whole clustering
 # if false the random samples matrix has the same height as the sts matrix
 reduced_sampling <- TRUE
-#not working yet
-dim_red <- FALSE
+dim_red <- TRUE
 
 # if hyperparameters should be same among all cluster algorithms
 unify <- TRUE

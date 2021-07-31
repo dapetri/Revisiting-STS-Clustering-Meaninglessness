@@ -21,13 +21,19 @@ plot(idx,bitcoin_alltime,type='l')
 Now we look at the clusters of the four data matrizes (sts_target,sts_opposed,whole_target,whole_opposed) calculated for different r,k,w values for the Bitcoin as target time series.
 ```{r}
 source("random_walk.R")
+source("ts_processing.R")
+source("distance_measures.R")
+source("meaningfulness_functions.R")
+source('scale_feature_matrix.R')
+source("cluster_functions.R")
+library(caret)
 n <- 1
-r <- 10
+r <- 7
 
 #ks <- c(3,5,7,11)
 #ws <- c(8,16,32)
 
-k <- 5
+k <- 3
 w <- 8
 
 norm_methods <- c("none","center", "scale", "range");
@@ -39,9 +45,8 @@ cluster_algo <- cluster_algos[1]
 norm_method <- norm_methods[3]
 dist_metric <- dist_metrics[1]
 reduced_sampling <- TRUE
-#not working yet
-dim_red <- FALSE
-unify <- TRUE
+dim_red <- TRUE
+unify <- FALSE
 
 current_ts <- bitcoin_alltime
 opposing_ts <- create_random_walk(current_ts)
@@ -64,29 +69,149 @@ whole_random_matrix <- to_random_sampling_matrix(opposing_ts, w, reduced_samplin
 whole_random_matrix <- scale_feature_matrix(whole_random_matrix, norm_method)
   
 if (dim_red && w>8) {
-  
+  sts_ts_matrix <- prcomp(t(sts_ts_matrix))$rotation
+  whole_ts_matrix <- prcomp(t(whole_ts_matrix))$rotation
+  sts_random_matrix <- prcomp(t(sts_random_matrix))$rotation
+  whole_random_matrix <- prcomp(t(whole_random_matrix))$rotation
 }
   
 for (z in 1:n) {
-  sts_ts_centers <- array(0, c(k,w,r))
-  sts_random_centers <- array(0, c(k,w,r))
-    
-  whole_ts_centers <- array(0, c(k,w,r))
-  whole_random_centers <- array(0, c(k,w,r))
+  sts_target_centers <- array(0, c(k,w,r))
+  sts_opposing_centers <- array(0, c(k,w,r))
+  whole_target_centers <- array(0, c(k,w,r))
+  whole_opposing_centers <- array(0, c(k,w,r))
     
   for (i in 1:r) {
-    sts_ts_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo,unify)
-    whole_ts_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo,unify)
-    sts_random_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
-    whole_random_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
+    sts_target_centers[,,i] <- cluster_functions(sts_ts_matrix,k,cluster_algo,unify)
+    sts_opposing_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
+    whole_target_centers[,,i] <- cluster_functions(whole_ts_matrix,k,cluster_algo,unify)
+    whole_opposing_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
   }
-  cm_sts <- cluster_meaningfulness(sts_ts_centers, sts_random_centers, dist_metric)
-  cm_whole <- cluster_meaningfulness(whole_ts_centers, whole_random_centers, dist_metric)
+  cm_sts <- cluster_meaningfulness(sts_target_centers, sts_opposing_centers, dist_metric)
+  cm_whole <- cluster_meaningfulness(whole_target_centers, whole_opposing_centers, dist_metric)
     
   meaningfulness_sts <- meaningfulness_sts + cm_sts
   meaningfulness_whole <- meaningfulness_whole + cm_whole
 }
 meaningfulness_sts <- meaningfulness_sts/n
 meaningfulness_whole <- meaningfulness_whole/n
- 
+
+
+#print('--------------------------------------------------------------------------')    
+#print('STS target centers:')
+#print('')
+#print(sts_target_centers)
+#print('--------------------------------------------------------------------------')
+#print('STS opposing centers:')
+#print('')
+#print(sts_opposing_centers)
+#print('--------------------------------------------------------------------------')
+#print('Whole target centers:')
+#print('')
+#print(whole_target_centers)
+#print('--------------------------------------------------------------------------')
+#print('Whole opposing centers:')
+#print('')
+#print(whole_opposing_centers)
+#print('--------------------------------------------------------------------------')
+#print('')
+#print(paste('sts meaning: ',(meaningfulness_sts/n)))
+#print(paste('whole meaning: ',(meaningfulness_whole/n)))
+
+
+
+###### visualize ######
+n_comp <- 2
+
+pca_sts_target_centers <- array(0,c(k,n_comp,r))
+pca_sts_opposing_centers <- array(0,c(k,n_comp,r))
+pca_whole_target_centers <- array(0,c(k,n_comp,r))
+pca_whole_opposing_centers <- array(0,c(k,n_comp,r))
+
+#pca_sts_target_var = np.zeros((r,k,n_comp))
+#pca_sts_opposing_var = np.zeros((r,k,n_comp))
+#pca_whole_target_var = np.zeros((r,k,n_comp))
+#pca_whole_opposing_var = np.zeros((r,k,n_comp))
+    
+for (i in 1:r) {
+  
+  
+    pca_sts_target <- prcomp(t(sts_target_centers[,,i]), rank=n_comp)
+    pca_sts_opposing <- prcomp(t(sts_opposing_centers[,,i]), rank=n_comp)
+    pca_whole_target <- prcomp(t(whole_target_centers[,,i]), rank=n_comp)
+    pca_whole_opposing <- prcomp(t(whole_opposing_centers[,,i]), rank=n_comp)
+    
+    #pca_sts_target_var[i] = pca_sts_target.explained_variance_ratio_
+    #pca_sts_opposing_var[i] = pca_sts_opposing.explained_variance_ratio_
+    #pca_whole_target_var[i] = pca_whole_target.explained_variance_ratio_
+    #pca_whole_opposing_var[i] = pca_whole_opposing.explained_variance_ratio_
+       
+    pca_sts_target_centers[,,i] <- pca_sts_target$rotation
+    pca_sts_opposing_centers[,,i] <- pca_sts_opposing$rotation
+    pca_whole_target_centers[,,i] <- pca_whole_target$rotation
+    pca_whole_opposing_centers[,,i] <- pca_whole_opposing$rotation
+}
+
+#print('--------------------------------------------------------------------------')    
+#print('STS target centers:')
+#print('')
+#print(pca_sts_target_centers)
+#print('____')
+#print(pca_sts_target_var)
+#print('--------------------------------------------------------------------------')
+#print('STS opposing centers:')
+#print('')
+#print(pca_sts_opposing_centers)
+#print('____')
+#print(pca_sts_opposing_var)
+#print('--------------------------------------------------------------------------')
+#print('Whole target centers:')
+#print('')
+#print(pca_whole_target_centers)
+#print('____')
+#print(pca_whole_target_var)
+#print('--------------------------------------------------------------------------')
+#print('Whole opposing centers:')
+#print('')
+#print(pca_whole_opposing_centers)
+#print('____')
+#print(pca_whole_opposing_var)
+#print('--------------------------------------------------------------------------')
+#print('')
+
+
+colors = c('yellow','magenta','cyan','red','green','blue','black')
+
+
+plot(0,0)
+for (i in 1:r) {
+  for (v in 1:k) {
+    #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
+    arrows(0,0,pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i], col = colors[i])
+  }
+}
+
+plot(0,0)
+for (i in 1:r) {
+  for (v in 1:k) {
+    #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
+    arrows(0,0,pca_sts_opposing_centers[v,1,i],pca_sts_opposing_centers[v,2,i], col = colors[i])
+  }
+}
+
+plot(0,0)
+for (i in 1:r) {
+  for (v in 1:k) {
+    #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
+    arrows(0,0,pca_whole_target_centers[v,1,i],pca_whole_target_centers[v,2,i], col = colors[i])
+  }
+}
+
+plot(0,0)
+for (i in 1:r) {
+  for (v in 1:k) {
+    #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
+    arrows(0,0,pca_whole_opposing_centers[v,1,i],pca_whole_opposing_centers[v,2,i], col = colors[i])
+  }
+}
 ```
