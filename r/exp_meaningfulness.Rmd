@@ -81,7 +81,7 @@ bitcoin_alltime = as.double(char_bitcoin_alltime)
 idx = 1:length(bitcoin_alltime)
 
 for (i in idx) {
-  if (is.na(bitcoin_alltime[i])) {
+  if (is.na(bitcoin_alltime[i]) || is.nan(bitcoin_alltime[i])) {
     bitcoin_alltime[i] <- bitcoin_alltime[i-1]
   }
 }
@@ -124,9 +124,13 @@ plot(idx,air_quality,type='l')
 ```{r}
 source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
+<<<<<<< HEAD
 n <- 1
+=======
+n <- 4
+>>>>>>> 3688da2b736424e42748630a21d42ee2712a2cf3
 # size of cluster set to be calculated for within/between set cluster distance.
-r <- 3
+r <- 10
 
 ks <- c(3,5,7,11)
 ws <- c(8,16,32)
@@ -155,7 +159,7 @@ dim_red <- FALSE
 unify <- TRUE
 
 # used time series 
-current_ts <- spx_long
+current_ts <- spx_short
 
 # Instead of a random walk we could also pass any opposing time series
 opposing_ts <- spx_long
@@ -166,8 +170,6 @@ opposing_ts <- create_random_walk(current_ts)
 ### Finally calculate Meaningfulness
 
 ```{r}
-source("random_walk.R")
-source("meaningfulness_calculations.R")
 print('Experiment settings:')
 print('')
 sprintf("n:                                           %d",n)
@@ -197,6 +199,8 @@ meaningfulness_plot <- matrix(0, nrow=length(ws), ncol = (length(ks)*2))
 ```
 
 ```{r}
+source("random_walk.R")
+source("meaningfulness_calculations.R")
 i <- 1
 j <- 1
 for (w in 1:length(ws)) {
@@ -238,28 +242,55 @@ for (i in 1:length(ws)) {
 ### Calculating average meaningfulness over all time series
 
 ```{r}
+source("random_walk.R")
+source("meaningfulness_calculations.R")
+
 # spx_short, spx_long, min_daily_temp, dax_alltime, bitcoin_alltime, hydraulic, quality
+ks <- c(3,5,7,11)
+ws <- c(8,16,32)
+#ks <- c(3,5,7,11)
+#ws <- c(16,32)
+
+n <- 3
+r <- 10
+
 i <- 1
 j <- 1
+
 for (w in 1:length(ws)) {
   j <- 1
   for (k in 1:length(ks)) {
     m <- calculate_meaningfulness(spx_short, (spx_short), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: spx_short')
-    m <- m + calculate_meaningfulness(spx_long, (spx_long), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: spx_long')
-    m <- m + calculate_meaningfulness(min_daily_temp, (min_daily_temp), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: min_daily_temp')
-    m <- m + calculate_meaningfulness(dax_alltime, (dax_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: dax_alltime')
-    m <- m + calculate_meaningfulness(bitcoin_alltime, (bitcoin_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: bitcoin_alltime')
-    m <- m + calculate_meaningfulness(hydraulic, (hydraulic), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: hydraulic')
-    m <- m + calculate_meaningfulness(air_quality, (air_quality), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
-    print('Calculated: air_quality')
-    m <- m/7
-    print(m)
+    print(paste('Calculated: spx_short',m))
+    
+    m_ <- calculate_meaningfulness(spx_long, spx_long, n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    m <- m + m_
+    print(paste('Calculated: spx_long',m_))
+    
+    m_ <- calculate_meaningfulness(min_daily_temp, (min_daily_temp), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    m <- m + m_
+    print(paste('Calculated: min_daily_temp',m_))
+    
+    m_ <- calculate_meaningfulness(dax_alltime, (dax_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    m <- m + m_
+    print(paste('Calculated: dax_alltime',m_))
+    
+    m_ <- calculate_meaningfulness(bitcoin_alltime, (bitcoin_alltime), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    m <- m + m_
+    print(paste('Calculated: bitcoin_alltime',m_))
+    
+    m_ <- calculate_meaningfulness(hydraulic, (hydraulic), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify)
+    m <- m + m_
+    print(paste('Calculated: hydraulic',m_))
+    
+    m_ <- calculate_meaningfulness(air_quality, (air_quality), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify) 
+    m <- m + m_
+    print(paste('Calculated: air_quality',m_))
+    
+    m <- round(m/7, 2)
+    print(paste('Final',m))
+    print('')
+    print('')
 
     meaningfulness_table[i,] <- c(ws[w],ks[k],m[1],m[2])
     meaningfulness_plot[w,j] <- m[1]

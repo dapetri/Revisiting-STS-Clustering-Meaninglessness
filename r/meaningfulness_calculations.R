@@ -40,8 +40,9 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
   
   for (z in 1:n) {
     sts_ts_centers <- array(0, c(k,w,r))
-    whole_ts_centers <- array(0, c(k,w,r))
     sts_random_centers <- array(0, c(k,w,r))
+    
+    whole_ts_centers <- array(0, c(k,w,r))
     whole_random_centers <- array(0, c(k,w,r))
     
     for (i in 1:r) {
@@ -50,9 +51,19 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
       sts_random_centers[,,i] <- cluster_functions(sts_random_matrix,k,cluster_algo,unify)
       whole_random_centers[,,i] <- cluster_functions(whole_random_matrix,k,cluster_algo,unify)
     }
-    #print(sts_ts_kmeans_centers)
-    meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_ts_centers, sts_random_centers, dist_m)
-    meaningfulness_whole <-  meaningfulness_whole + cluster_meaningfulness(whole_ts_centers, whole_random_centers, dist_m)
+    cm_sts <- cluster_meaningfulness(sts_ts_centers, sts_random_centers, dist_m)
+    cm_whole <- cluster_meaningfulness(whole_ts_centers, whole_random_centers, dist_m)
+    
+    #print('')
+    
+    #print(paste('STS',cm_sts))
+    #print(paste('WHOLE',cm_whole))
+    
+    #print('')
+    #print('')
+    
+    meaningfulness_sts <- meaningfulness_sts + cm_sts
+    meaningfulness_whole <- meaningfulness_whole + cm_whole
   }
   return(c(meaningfulness_sts/n, meaningfulness_whole/n))
 }
