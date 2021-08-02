@@ -35,7 +35,10 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
   whole_random_matrix <- scale_feature_matrix(whole_random_matrix, norm_method)
   
   if (dim_red && w>8) {
-    
+    sts_ts_matrix <- prcomp(t(sts_ts_matrix))$rotation
+    whole_ts_matrix <- prcomp(t(whole_ts_matrix))$rotation
+    sts_random_matrix <- prcomp(t(sts_random_matrix))$rotation
+    whole_random_matrix <- prcomp(t(whole_random_matrix))$rotation
   }
   
   for (z in 1:n) {
