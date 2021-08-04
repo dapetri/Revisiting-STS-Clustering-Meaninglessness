@@ -5,6 +5,7 @@ function [d] = withinSetDistance(X,distM)
 %    :return dist: within set distance
 n = size(X,3);
 d = 0;
+
 for i = 1:n
     for j = 1:n
         d = d + clusterDistance(X(:,:,i),X(:,:,j),distM);

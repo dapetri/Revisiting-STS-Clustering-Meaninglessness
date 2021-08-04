@@ -1,11 +1,12 @@
-function [randomWalk] = createRandomWalk(ts)
+function [randomWalk] = createRandomWalk(ts,seed_)
 % Create same length random walk as times series.
 %   :param ts: time series to which length random walk should be equal (shape: [m])
 %   :return randomWalk: random walk with same length to ts (shape: [m])
 ma = max(ts);
 mi = min(ts);
 movement =  10;
-rng(0)
+
+rng(seed_);
 
 randomWalk = zeros(1,length(ts));
 randomWalk(1) = mi + rand * (ma-mi);

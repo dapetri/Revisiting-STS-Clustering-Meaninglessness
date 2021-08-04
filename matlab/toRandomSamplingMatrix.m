@@ -1,4 +1,4 @@
-function [dataMatrix] = toRandomSamplingMatrix(ts,w,reducedSamplingSize)
+function [dataMatrix] = toRandomSamplingMatrix(ts,w,reducedSamplingSize,seed_)
 % Create random sampling matrix for whole clustering by extracting random 
 % subsequences from ts.
 %   :param ts: time series random sampling matrix should be created from (shape: [m])
@@ -12,6 +12,9 @@ if reducedSamplingSize
 else 
     numSamples = m-w+1;
 end
+
+rng(seed_);
+
 dataMatrix = zeros(numSamples, w);
 for i = 1: numSamples
     r = randi(m-w);

@@ -11,7 +11,7 @@ to_sts_matrix <- function(ts,w) {
   return(sts)
 }
 
-to_random_sampling_matrix <- function(ts,w,red_sampl_size) {
+to_random_sampling_matrix <- function(ts,w,red_sampl_size,seed_) {
 #  Create random sampling matrix for whole clustering by extracting random subsequences from ts.
 #  :param ts: time series random sampling matrix should be created from (shape: [m])
 #  :param w: sliding window length
@@ -25,6 +25,8 @@ to_random_sampling_matrix <- function(ts,w,red_sampl_size) {
   } else {
     num_samples <- m-w+1
   }
+  
+  set.seed(seed_)
   
   data_matrix <- matrix(0, nrow = num_samples, ncol = w)
   

@@ -5,7 +5,7 @@ source('scale_feature_matrix.R')
 source("cluster_functions.R")
 library(caret)
 
-calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_algo,reduced_sampling,dim_red,unify) {
+calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_) {
 #  Calculating sts and whole meaningfulness for 2 given time series where ts is the time series in regard.
 #  :param ts: time series in regard (shape: [m])
 #  :param opposing_ts: opposing time series (e.g. random walk) (shape: [m']) where m' not necessatily equal to m
@@ -25,13 +25,13 @@ calculate_meaningfulness <- function(ts,rw,n,k,w,r,dist_m,norm_method,cluster_al
   sts_ts_matrix <- to_sts_matrix(ts, w)
   sts_ts_matrix <- scale_feature_matrix(sts_ts_matrix, norm_method)
   
-  whole_ts_matrix <- to_random_sampling_matrix(ts, w, reduced_sampling)
-  whole_ts_matrix <- scale_feature_matrix(whole_ts_matrix, norm_method)
-  
   sts_random_matrix <- to_sts_matrix(rw, w)
   sts_random_matrix <- scale_feature_matrix(sts_random_matrix, norm_method)
   
-  whole_random_matrix <- to_random_sampling_matrix(rw, w, reduced_sampling)
+  whole_ts_matrix <- to_random_sampling_matrix(ts, w, reduced_sampling, seed_)
+  whole_ts_matrix <- scale_feature_matrix(whole_ts_matrix, norm_method)
+  
+  whole_random_matrix <- to_random_sampling_matrix(rw, w, reduced_sampling, seed_)
   whole_random_matrix <- scale_feature_matrix(whole_random_matrix, norm_method)
   
   if (dim_red && w>8) {
