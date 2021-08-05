@@ -13,7 +13,7 @@ else
     numSamples = m-w+1;
 end
 
-rng(seed_);
+%rng(seed_);
 
 dataMatrix = zeros(numSamples, w);
 for i = 1: numSamples

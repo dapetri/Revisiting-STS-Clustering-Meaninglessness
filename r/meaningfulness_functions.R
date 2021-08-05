@@ -72,14 +72,7 @@ cluster_meaningfulness <- function(X,Y,distM) {
   m <- w / b 
   
   if (is.nan(m)) {
-    m <- 0
     print('b was 0')
-    #if (w == 0) {
-    #  m <- 0
-    #} else {
-    #  m <- w/.Machine$double.xmin
-    #}
-    
   }
   
   return(m)

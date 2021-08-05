@@ -22,11 +22,10 @@ sts_opposing_matrix = toStsMatrix(opposing_ts, w);
 whole_target_matrix = toRandomSamplingMatrix(target_ts, w, reducedSampling, seed_);
 whole_opposing_matrix = toRandomSamplingMatrix(opposing_ts, w, reducedSampling, seed_);
 
-
-
 sts_target_matrix = scaleFeatureMatrix(sts_target_matrix, normMethod);
-whole_target_matrix = scaleFeatureMatrix(whole_target_matrix, normMethod);
 sts_opposing_matrix = scaleFeatureMatrix(sts_opposing_matrix, normMethod);
+
+whole_target_matrix = scaleFeatureMatrix(whole_target_matrix, normMethod);
 whole_opposing_matrix = scaleFeatureMatrix(whole_opposing_matrix, normMethod);
 
 
@@ -45,14 +44,16 @@ if dimRed && w>8
 end
 for z = 1:n
     sts_target_centers = zeros(k,w);
-    whole_target_centers = zeros(k,w);
     sts_opposing_centers = zeros(k,w);
+       
+    whole_target_centers = zeros(k,w);
     whole_opposing_centers = zeros(k,w);
 
     for i = 1:r
         sts_target_centers(:,:,i) = clusterFunctions(sts_target_matrix,k,clusterAlgo,unify);
-        whole_target_centers(:,:,i) = clusterFunctions(whole_target_matrix,k,clusterAlgo,unify);
         sts_opposing_centers(:,:,i) = clusterFunctions(sts_opposing_matrix,k,clusterAlgo,unify);
+        
+        whole_target_centers(:,:,i) = clusterFunctions(whole_target_matrix,k,clusterAlgo,unify);
         whole_opposing_centers(:,:,i) = clusterFunctions(whole_opposing_matrix,k,clusterAlgo,unify);    
         
     end
