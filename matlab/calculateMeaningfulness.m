@@ -29,25 +29,29 @@ whole_target_matrix = scaleFeatureMatrix(whole_target_matrix, normMethod);
 whole_opposing_matrix = scaleFeatureMatrix(whole_opposing_matrix, normMethod);
 
 
-if dimRed && w>8
-    [~,score,~] = pca(sts_target_matrix);
-    sts_target_matrix = score;
-    
-    [~,score,~] = pca(whole_target_matrix);
-    whole_target_matrix = score;
-    
-    [~,score,~] = pca(sts_opposing_matrix);
-    sts_opposing_matrix = score;
-    
-    [~,score,~] = pca(whole_opposing_matrix);
-    whole_opposing_matrix = score;
+if dimRed 
+    sts_target_matrix = dimReduction(sts_target_matrix, 90);
+    sts_opposing_matrix = dimReduction(sts_opposing_matrix, 90);
+
+    whole_target_matrix = dimReduction(whole_target_matrix, 90);
+    whole_opposing_matrix = dimReduction(whole_opposing_matrix, 90);
 end
+
+w_sts = min(size(sts_target_matrix, 2), size(sts_opposing_matrix, 2));
+w_whole = min(size(whole_target_matrix, 2), size(whole_opposing_matrix, 2));
+
+sts_target_matrix = sts_target_matrix(:,1:w_sts);
+sts_opposing_matrix = sts_opposing_matrix(:,1:w_sts);
+
+whole_target_matrix = whole_target_matrix(:,1:w_whole);
+whole_opposing_matrix = whole_opposing_matrix(:,1:w_whole);
+
 for z = 1:n
-    sts_target_centers = zeros(k,w);
-    sts_opposing_centers = zeros(k,w);
+    sts_target_centers = zeros(k,w_sts);
+    sts_opposing_centers = zeros(k,w_sts);
        
-    whole_target_centers = zeros(k,w);
-    whole_opposing_centers = zeros(k,w);
+    whole_target_centers = zeros(k,w_whole);
+    whole_opposing_centers = zeros(k,w_whole);
 
     for i = 1:r
         sts_target_centers(:,:,i) = clusterFunctions(sts_target_matrix,k,clusterAlgo,unify);
@@ -57,8 +61,10 @@ for z = 1:n
         whole_opposing_centers(:,:,i) = clusterFunctions(whole_opposing_matrix,k,clusterAlgo,unify);    
         
     end
+    %disp(whole_target_centers);
+    
     meaningfulness_sts = meaningfulness_sts + clusteringMeaningfulness(sts_target_centers, sts_opposing_centers, distM);
-    meaningfulness_whole =  meaningfulness_whole + clusteringMeaningfulness(whole_target_centers, whole_opposing_centers, distM);
+    meaningfulness_whole = meaningfulness_whole + clusteringMeaningfulness(whole_target_centers, whole_opposing_centers, distM);
 end
 meaningfulness_sts = meaningfulness_sts/n;
 meaningfulness_whole = meaningfulness_whole/n;

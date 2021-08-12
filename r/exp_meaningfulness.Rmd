@@ -107,7 +107,7 @@ cluster_algos <- c("kmeans","agglo","gmm")
 
 
 ##### unification #####
-unify <- FALSE
+unify <- TRUE
 
 ##### clustering algorithm #####
 cluster_algo <- cluster_algos[1]
@@ -115,8 +115,8 @@ cluster_algo <- cluster_algos[1]
 ############ unchanged hyperparameters ############
 dist_metric <- dist_metrics[1]
 seed_ <- 0
-dim_red <- TRUE
-norm_method <- norm_methods[1]
+dim_red <- TRUE 
+norm_method <- norm_methods[3]
 # reduces de sampling size of the random sampled subsequences that are used for whole clustering
 # if false the random samples matrix has the same height as the sts matrix
 reduced_sampling <- TRUE
@@ -143,20 +143,20 @@ sprintf('Reduced sampling size for whole clustering:  %s',reduced_sampling)
 sprintf('PCA:                                         %s',dim_red)
 sprintf('Unified hyperparameters:                     %s',unify)
 
-plot(1:length(target_ts),target_ts, type = 'l')
-title("Target time series")
+#plot(1:length(target_ts),target_ts, type = 'l')
+#title("Target time series")
 
-plot(1:length(opposing_ts),opposing_ts,type = 'l')
-title("Opposing time series")
+#plot(1:length(opposing_ts),opposing_ts,type = 'l')
+#title("Opposing time series")
 
-print("")
-print("Results:")
+#print("")
+#print("Results:")
 
-l_ks <- length(ks)
-l_ws <- length(ws)
+#l_ks <- length(ks)
+#l_ws <- length(ws)
 
-meaningfulness_table <- matrix(0, nrow = (l_ks*l_ws), ncol = 4)
-meaningfulness_plot <- matrix(0, nrow=length(ws), ncol = (length(ks)*2))
+#meaningfulness_table <- matrix(0, nrow = (l_ks*l_ws), ncol = 4)
+#meaningfulness_plot <- matrix(0, nrow=length(ws), ncol = (length(ks)*2))
 
 ```
 
@@ -218,29 +218,29 @@ for (w in 1:length(ws)) {
   j <- 1
   for (k in 1:length(ks)) {
     m <- calculate_meaningfulness(spx, create_random_walk(spx, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_)
-    print(paste('Calculated: spx_short',m))
+    #print(paste('Calculated: spx_short',m))
     
     m_ <- calculate_meaningfulness(min_daily_temp, create_random_walk(min_daily_temp, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_)
     m <- m + m_
-    print(paste('Calculated: min_daily_temp',m_))
+    #print(paste('Calculated: min_daily_temp',m_))
     
     m_ <- calculate_meaningfulness(dax_alltime, create_random_walk(dax_alltime, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_)
     m <- m + m_
-    print(paste('Calculated: dax_alltime',m_))
+    #print(paste('Calculated: dax_alltime',m_))
     
     m_ <- calculate_meaningfulness(bitcoin_alltime, create_random_walk(bitcoin_alltime, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_)
     m <- m + m_
-    print(paste('Calculated: bitcoin_alltime',m_))
+    #print(paste('Calculated: bitcoin_alltime',m_))
     
     m_ <- calculate_meaningfulness(hydraulic, create_random_walk(hydraulic, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_)
     m <- m + m_
-    print(paste('Calculated: hydraulic',m_))
+    #print(paste('Calculated: hydraulic',m_))
     
-    #m_ <- calculate_meaningfulness(air_quality, create_random_walk(air_quality, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_) 
-    #m <- m + m_
+    m_ <- calculate_meaningfulness(air_quality, create_random_walk(air_quality, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_) 
+    m <- m + m_
     #print(paste('Calculated: air_quality',m_))
     
-    m <- round(m/5, 2)
+    m <- round(m/6, 2)
     print(paste('Final',m))
     print('')
     print('')
