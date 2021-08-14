@@ -96,7 +96,7 @@ source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
 n <- 10
 # size of cluster set to be calculated for within/between set cluster distance.
-r <- 3
+r <- 10
 
 ks <- c(3,5,7,11)
 ws <- c(8,16,32)
@@ -236,11 +236,11 @@ for (w in 1:length(ws)) {
     m <- m + m_
     #print(paste('Calculated: hydraulic',m_))
     
-    m_ <- calculate_meaningfulness(air_quality, create_random_walk(air_quality, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_) 
-    m <- m + m_
+    #m_ <- calculate_meaningfulness(air_quality, create_random_walk(air_quality, seed_), n,ks[k],ws[w],r,dist_metric,norm_method,cluster_algo,reduced_sampling,dim_red,unify,seed_) 
+    # <- m + m_
     #print(paste('Calculated: air_quality',m_))
     
-    m <- round(m/6, 2)
+    m <- round(m/5, 2)
     print(paste('Final',m))
     print('')
     print('')

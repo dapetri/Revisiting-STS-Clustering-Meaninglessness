@@ -7,11 +7,12 @@ function [meaning] = clusteringMeaningfulness(X,Y,distM)
 wsd = withinSetDistance(X,distM);
 bsd = betweenSetDistance(X,Y,distM);
 
-m = wsd / bsd;
+if bsd == 0
+    disp("bsd was 0");
+end 
 
-%if isnan(m)
-%    m = 1;
-%end    
+m = wsd / (bsd + 1e-6);
+   
 meaning = (m);
 end
 

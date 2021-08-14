@@ -65,15 +65,16 @@ cluster_meaningfulness <- function(X,Y,distM) {
 #  :return: clustering meaningfulness as a quotient of within set distance of x and between set distance between x and y
   w <- within_set_distance(X,distM)
   b <- between_set_distance(X,Y,distM)
-
-  #print(paste('WSD',w))
-  #print(paste('BSD',b))
   
-  m <- w / b 
-  
-  if (is.nan(m)) {
-    print('b was 0')
+  if (b == 0) {
+    print('bsd was 0')
   }
+
+  print(paste('WSD',w))
+  print(paste('BSD',b))
+  print('##################')
+  
+  m <- w / (b + 1e-6)
   
   return(m)
 }
