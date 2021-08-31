@@ -96,7 +96,7 @@ source("random_walk.R")
 # number of iterations of meaningfulness calculation to average over.
 n <- 10
 # size of cluster set to be calculated for within/between set cluster distance.
-r <- 10
+r <- 3
 
 ks <- c(3,5,7,11)
 ws <- c(8,16,32)
@@ -110,7 +110,7 @@ cluster_algos <- c("kmeans","agglo","gmm")
 unify <- TRUE
 
 ##### clustering algorithm #####
-cluster_algo <- cluster_algos[1]
+cluster_algo <- cluster_algos[3]
 
 ############ unchanged hyperparameters ############
 dist_metric <- dist_metrics[1]
