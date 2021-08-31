@@ -24,21 +24,21 @@ library(caret)
 
 ###################################
 n <- 1
-r <- 3
+r <- 10
 
 #ks <- c(3,5,7,11)
 #ws <- c(8,16,32)
 
-k <- 11
-w <- 32
+k <- 3
+w <- 8
+
+cluster_algo <- cluster_algos[3]
+unify <- TRUE
+##################################################
 
 norm_methods <- c("none","center", "scale", "range");
 dist_metrics <- c("eukl")
 cluster_algos <- c("kmeans","agglo","gmm")
-
-cluster_algo <- cluster_algos[3]
-unify <- FALSE
-##################################################
 
 norm_method <- norm_methods[3]
 dist_metric <- dist_metrics[1]
@@ -99,8 +99,10 @@ for (z in 1:n) {
     whole_opposing_centers[,,i] <- cluster_functions(whole_opposing_matrix,k,cluster_algo,unify)
   }
 
-    
+  print('STS')  
   meaningfulness_sts <- meaningfulness_sts + cluster_meaningfulness(sts_target_centers, sts_opposing_centers, dist_metric)
+  print('~~~~~~~~~')
+  print('WHOLE')
   meaningfulness_whole <- meaningfulness_whole + cluster_meaningfulness(whole_target_centers, whole_opposing_centers, dist_metric)
   }
 meaningfulness_sts <- meaningfulness_sts / n
@@ -190,7 +192,7 @@ for (i in 1:r) {
 #print('')
 
 
-colors = c('black','purple','cyan','yellow','magenta','cyan','red','green','blue')
+colors = c('black','magenta','cyan','red','green','blue','orange','lightblue','pink','purple')
 
 
 plot(0,0)
