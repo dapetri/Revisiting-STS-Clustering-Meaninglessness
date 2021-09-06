@@ -6,6 +6,6 @@ scale_feature_matrix <- function(feat_matrix,normMethod) {
   if (normMethod == "none") {
     return(feat_matrix)
   } else {
-    return(scale(feat_matrix))
+    return(t(scale(t(feat_matrix))))
   }
 }

@@ -24,7 +24,7 @@ library(caret)
 
 ###################################
 n <- 1
-r <- 10
+r <- 3
 
 #ks <- c(3,5,7,11)
 #ws <- c(8,16,32)
@@ -32,7 +32,7 @@ r <- 10
 k <- 3
 w <- 8
 
-cluster_algo <- cluster_algos[3]
+cluster_algo <- cluster_algos[1]
 unify <- TRUE
 ##################################################
 
@@ -42,7 +42,7 @@ cluster_algos <- c("kmeans","agglo","gmm")
 
 norm_method <- norm_methods[3]
 dist_metric <- dist_metrics[1]
-reduced_sampling <- TRUE
+reduced_sampling <- FALSE
 dim_red <- TRUE
 seed_ <- 0
 
@@ -199,7 +199,7 @@ plot(0,0)
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i], col = colors[i])
+    arrows(0,0,pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i], col = colors[i], length = 0)
   }
 }
 
@@ -207,7 +207,7 @@ plot(0,0)
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_whole_target_centers[v,1,i],pca_whole_target_centers[v,2,i], col = colors[i])
+    arrows(0,0,pca_whole_target_centers[v,1,i],pca_whole_target_centers[v,2,i], col = colors[i], length = 0)
   }
 }
 
@@ -216,13 +216,13 @@ plot(0,0)
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i], col = 'black')
+    arrows(0,0,pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i], col = 'black', length = 0)
   }
 }
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_sts_opposing_centers[v,1,i],pca_sts_opposing_centers[v,2,i], col = 'red')
+    arrows(0,0,pca_sts_opposing_centers[v,1,i],pca_sts_opposing_centers[v,2,i], col = 'red', length = 0)
   }
 }
 
@@ -230,13 +230,13 @@ plot(0,0)
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_whole_target_centers[v,1,i],pca_whole_target_centers[v,2,i], col = 'black')
+    arrows(0,0,pca_whole_target_centers[v,1,i],pca_whole_target_centers[v,2,i], col = 'black', length = 0)
   }
 }
 for (i in 1:r) {
   for (v in 1:k) {
     #points(pca_sts_target_centers[v,1,i],pca_sts_target_centers[v,2,i])
-    arrows(0,0,pca_whole_opposing_centers[v,1,i],pca_whole_opposing_centers[v,2,i], col = 'red')
+    arrows(0,0,pca_whole_opposing_centers[v,1,i],pca_whole_opposing_centers[v,2,i], col = 'red', length = 0)
   }
 }
 ```

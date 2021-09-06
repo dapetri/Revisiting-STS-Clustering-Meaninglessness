@@ -15,8 +15,8 @@ cluster_distance <- function(A,B,distM) {
     for (j in 1:m) {
       d <- distance_measure(A[i,1:w],B[j,1:w],distM)
       ## is.nan because for some reason kmeans produces sometimes centroids that are NaN vectors
-      if (!is.nan(d) && d < minn) {
-      #if (d < minn) {
+      #if (!is.nan(d) && d < minn) {
+      if (d < minn) {
         minn <- d
       }
     }
