@@ -6,8 +6,8 @@ function [meaning] = clusteringMeaningfulness(X,Y,distM)
 %    :return meaning: clustering meaningfulness as a quotient ofwithin set distance of x and between set distance between x and y
 wsd = withinSetDistance(X,distM);
 bsd = betweenSetDistance(X,Y,distM);
-disp(strcat('wsd: ',num2str(round(wsd,2))));
-disp(strcat('bsd: ',num2str(round(bsd,2))));
+%disp(strcat('wsd: ',num2str(round(wsd,2))));
+%disp(strcat('bsd: ',num2str(round(bsd,2))));
 if bsd == 0
     disp("bsd was 0");
 end 

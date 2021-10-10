@@ -70,8 +70,8 @@ cluster_meaningfulness <- function(X,Y,distM) {
     print('bsd was 0')
   }
 
-  print(paste('wsd :', round(w,2)))
-  print(paste('bsd :', round(b,2)))
+  #print(paste('wsd :', round(w,2)))
+  #print(paste('bsd :', round(b,2)))
   #print('##################')
   
   m <- w / (b + 1e-6)

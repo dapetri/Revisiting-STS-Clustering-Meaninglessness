@@ -37,6 +37,8 @@ if dimRed
     whole_opposing_matrix = dimReduction(whole_opposing_matrix, 90);
 end
 
+size(sts_target_matrix)
+
 w_sts = min(size(sts_target_matrix, 2), size(sts_opposing_matrix, 2));
 w_whole = min(size(whole_target_matrix, 2), size(whole_opposing_matrix, 2));
 
